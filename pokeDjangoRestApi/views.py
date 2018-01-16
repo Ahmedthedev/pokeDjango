@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.shortcuts import get_list_or_404,get_object_or_404
+from django.shortcuts import get_list_or_404, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from rest_framework import  status
 from .models import Pokemon
@@ -12,10 +12,6 @@ from django.core import serializers
 from django.shortcuts import render
 
 # Create your views here.
-# url(r'^pokemons/$',views.pokemons),
-# url(r'^pokemonTrainers/$',views.pokemonsTrainers),
-# url(r'^trainers/$',views.trainers),
-# url(r'^types/$',views.types)
 
 @csrf_exempt
 def pokemons(request):
@@ -28,4 +24,34 @@ def pokemons(request):
         pokemon.save()
         return HttpResponse(status=status.HTTP_200_OK)
 
+def pokemonsById(request, pokemon_id):
+    pokemon = Pokemon.objects.get(pk=pokemon_id)
+    serializer = PokemonSerializer(pokemon, many=False)
+    return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
 
+
+
+
+def pokemonsTrainers(request):
+    return HttpResponse(status=status.HTTP_200_OK)
+
+def pokemonsTrainersById(request, pokemonsTrainers_id):
+    return HttpResponse(status=status.HTTP_200_OK)
+
+
+
+
+def trainers(request):
+    return HttpResponse(status=status.HTTP_200_OK)
+
+def trainersById(request, trainers_id):
+    return HttpResponse(status=status.HTTP_200_OK)
+
+
+
+
+def types(request):
+    return HttpResponse(status=status.HTTP_200_OK)
+
+def typesById(request, types_id):
+    return HttpResponse(status=status.HTTP_200_OK)

@@ -17,12 +17,14 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^pokemons/$', views.pokemons)
-    # url(r'^pokemonTrainers/$', views.pokemonsTrainers),
-    # url(r'^trainers/$', views.trainers),
-    # url(r'^types/$', views.types)
-
-
+    url(r'^pokemons/$', views.pokemons),
+    url(r'^pokemons/(?P<pokemon_id>[0-9]+)/$', views.pokemonsById),
+    url(r'^pokemonTrainers/$', views.pokemonsTrainers),
+    url(r'^pokemonTrainers/(?P<pokemonsTrainers_id>[0-9]+)/$', views.pokemonsTrainersById),
+    url(r'^trainers/$', views.trainers),
+    url(r'^trainers/(?P<trainers_id>[0-9]+)/$', views.trainersById),
+    url(r'^types/$', views.types),
+    url(r'^types/(?P<types_id>[0-9]+)/$', views.typesById)
 
     # url(r'^professors/([0-9]{4})/$', views.professorDetails),
     # url(r'^promotions/$', views.promotions),
