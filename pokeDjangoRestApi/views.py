@@ -6,6 +6,8 @@ from rest_framework import  status
 from .models import Pokemon
 from django.views.decorators.csrf import csrf_exempt
 from pokeDjangoRestApi.serializers import *
+from django.core import serializers
+
 
 from django.shortcuts import render
 
@@ -17,15 +19,13 @@ from django.shortcuts import render
 
 @csrf_exempt
 def pokemons(request):
-    print(request.method )
     if request.method == 'GET':
         pokemons = Pokemon.objects.all()
         serializer = PokemonSerializer(pokemons, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        #print(request.)
-        #pokemon = request.POST.get('pokemon')
-        #pokemon.save()
+        pokemon = serializers.deserialize(Pokemon,request.body)
+        pokemon.save()
         return HttpResponse(status=status.HTTP_200_OK)
 
 
