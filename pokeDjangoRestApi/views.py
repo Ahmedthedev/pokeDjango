@@ -49,33 +49,66 @@ def pokemonsById(request, pokemon_id):
 
 
 
+### TrainerPokemon
 
-
-
+@csrf_exempt
 def pokemonsTrainers(request):
-    return HttpResponse(status=status.HTTP_200_OK)
+    if request.method == 'GET':
+        trainers = TrainerPokemon.objects.all()
+        serializer = TrainerPokemonSerializer(trainers, many=True)
+        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        return HttpResponse(status=status.HTTP_200_OK)
 
+@csrf_exempt
 def pokemonsTrainersById(request, pokemonsTrainers_id):
-    pokemonsTrainers = PokemonTrainers.objects.get(pk=pokemonsTrainers_id)
-    serializer = PokemonTrainersSerializer(pokemonsTrainers, many=False)
-    return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    if request.method == 'GET':
+        pokemonsTrainers = TrainerPokemon.objects.get(pk=pokemonsTrainers_id)
+        serializer = TrainerPokemonSerializer(pokemonsTrainers, many=False)
+        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    elif request.method == 'PUT':
+        return HttpResponse(status=status.HTTP_200_OK)
 
 
 
+### Trainer
 
+@csrf_exempt
 def trainers(request):
-    return HttpResponse(status=status.HTTP_200_OK)
+    if request.method == 'GET':
+        trainers = Trainer.objects.all()
+        serializer = TrainerSerializer(trainers, many=True)
+        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        return HttpResponse(status=status.HTTP_200_OK)
 
+@csrf_exempt
 def trainersById(request, trainers_id):
-    trainer = Trainer.objects.get(pk=trainers_id)
-    serializer = TrainerSerializer(trainer, many=False)
-    return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    if request.method == 'GET':
+        trainer = Trainer.objects.get(pk=trainers_id)
+        serializer = TrainerSerializer(trainer, many=False)
+        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    elif request.method == 'PUT':
+        return HttpResponse(status=status.HTTP_200_OK)
 
 
 
+### Types
 
+@csrf_exempt
 def types(request):
-    return HttpResponse(status=status.HTTP_200_OK)
+    if request.method == 'GET':
+        types = Type.objects.all()
+        serializer = TypeSerializer(types, many=True)
+        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        return HttpResponse(status=status.HTTP_200_OK)
 
+@csrf_exempt
 def typesById(request, types_id):
-    return HttpResponse(status=status.HTTP_200_OK)
+    if request.method == 'GET':
+        pokeType = Type.objects.get(pk=types_id)
+        serializer = TypeSerializer(pokeType, many=False)
+        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    elif request.method == 'PUT':
+        return HttpResponse(status=status.HTTP_200_OK)
