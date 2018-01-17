@@ -26,5 +26,5 @@ urlpatterns = [
     url(r'^types$', views.types),
     url(r'^types/(?P<types_id>[0-9]+)$', views.typesById),
     url(r'^images$', views.imgs),
-    url(r'^images$(?P<images_id>[0-9]+)$', views.typesById)
+    url(r'^images/(?P<images_id>[0-9]+)$', views.imgsByID)
 ]

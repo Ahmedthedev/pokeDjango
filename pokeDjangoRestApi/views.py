@@ -29,7 +29,33 @@ def imgs(request):
         else:
             return HttpResponse(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
-
+@csrf_exempt
+def imgsByID(request,images_id):
+    if request.method == 'PUT':
+        try:
+            j = json.loads(request.body)
+            pokeType = Image.objects.filter(pk=images_id)
+            response = pokeType.update(name=j["url"])
+            if response == 0 :
+                return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return HttpResponse(status=status.HTTP_200_OK)
+        except Type.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    elif request.method == 'GET':
+        try:
+            pokemon = Pokemon.objects.get(pk=images_id)
+            serializer = PokemonSerializer(pokemon, many=False)
+            return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        except Pokemon.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    elif request.method == 'DELETE':
+        try:
+            pokemon = Pokemon.objects.get(pk=images_id)
+            pokemon.pk = images_id
+            pokemon.delete()
+            return HttpResponse(status=status.HTTP_200_OK)
+        except Pokemon.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
 @csrf_exempt
 def pokemons(request):
@@ -172,15 +198,6 @@ def trainersById(request, trainers_id):
         else:
             return HttpResponse(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
-        # j = json.loads(request.body)
-        # try:
-        #     trainer = Trainer.objects.filter(pk=trainers_id)
-        #     resp = trainer.update(name=j["name"], gender=j["gender"], image=j["image"])
-        #     if resp == 0:
-        #         return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        #     return HttpResponse(status=status.HTTP_200_OK)
-        # except (Trainer.DoesNotExist, Pokemon.DoesNotExist):
-        #     return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     elif request.method == 'DELETE':
         try:
             trainer = Trainer.objects.get(pk=trainers_id)
