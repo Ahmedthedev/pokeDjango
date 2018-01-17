@@ -18,7 +18,7 @@ class Image(models.Model):
 class Trainer(models.Model):
     name = models.CharField(max_length=50, unique=True)
     gender = models.CharField(max_length=20)
-    image = models.OneToOneField(Image)
+    image = models.OneToOneField(Image, null=True)
 
 
 class TrainerPokemon(models.Model):
