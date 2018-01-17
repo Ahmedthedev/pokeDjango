@@ -55,7 +55,7 @@ def pokemonsById(request, pokemon_id):
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
         
     elif request.method == 'DELETE':
-         try:
+        try:
             print("delete")
             print(pokemon_id)
             pokemon = Pokemon.objects.get(pk=pokemon_id)
