@@ -24,15 +24,6 @@ urlpatterns = [
     url(r'^trainers/$', views.trainers),
     url(r'^trainers/(?P<trainers_id>[0-9]+)/$', views.trainersById),
     url(r'^types/$', views.types),
-    url(r'^types/(?P<types_id>[0-9]+)/$', views.typesById)
-
-    # url(r'^professors/([0-9]{4})/$', views.professorDetails),
-    # url(r'^promotions/$', views.promotions),
-    # url(r'^promotions/([0-9]{4})/$', views.promotionDetails),
-    # url(r'^students/$', views.students),
-    # url(r'^students/([0-9]{4})/$', views.studentDetails),
-    # url(r'^subjects/$', views.subjects),
-    # url(r'^subjects/([0-9]{4})/$', views.subjectDetails),
-    # url(r'^classes/$', views.classes),
-    # url(r'^classes/([0-9]{4})/$', views.classeDetails)
+    url(r'^types/(?P<types_id>[0-9]+)/$', views.typesById),
+    url(r'^images/$', views.imgs),
 ]
