@@ -27,9 +27,9 @@ def pokemons(request):
         pokemons = Pokemon.objects.all()
         serializer = PokemonSerializer(pokemons, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
-    elif request.method == 'POST':
+    elif request.method == 'git pPOST':
         j = json.loads(request.body)
-        p = Pokemon(name=j["name"],description=j["description"])
+        p = Pokemon(name=j["name"], description=j["description"])
         p.save()
         return HttpResponse(status=status.HTTP_200_OK)
 
@@ -46,8 +46,13 @@ def pokemonsById(request, pokemon_id):
         if response == 0 :
             return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return HttpResponse(status=status.HTTP_200_OK)
-
-
+    elif request.method == 'DELETE':
+        print("delete")
+        print(pokemon_id)
+        pokemon = Pokemon.objects.get(pk=pokemon_id)
+        pokemon.pk = pokemon_id
+        pokemon.delete()
+        return HttpResponse(status=status.HTTP_200_OK)
 
 
 
