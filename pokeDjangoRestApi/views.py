@@ -44,14 +44,14 @@ def imgsByID(request,images_id):
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     elif request.method == 'GET':
         try:
-            pokemon = Pokemon.objects.get(pk=images_id)
+            pokemon = Image.objects.get(pk=images_id)
             serializer = PokemonSerializer(pokemon, many=False)
             return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
         except Pokemon.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     elif request.method == 'DELETE':
         try:
-            pokemon = Pokemon.objects.get(pk=images_id)
+            pokemon = Image.objects.get(pk=images_id)
             pokemon.pk = images_id
             pokemon.delete()
             return HttpResponse(status=status.HTTP_200_OK)
