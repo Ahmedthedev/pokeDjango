@@ -165,7 +165,16 @@ def types(request):
         serializer = TypeSerializer(types, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        return HttpResponse(status=status.HTTP_200_OK)
+        try:
+            data = JSONParser().parse(request)
+        except ParseError:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        serializer = TypeSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return HttpResponse(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
 def typesById(request, types_id):
@@ -177,4 +186,20 @@ def typesById(request, types_id):
         except Type.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     elif request.method == 'PUT':
-        return HttpResponse(status=status.HTTP_200_OK)
+        try:
+            j = json.loads(request.body)
+            pokeType = Type.objects.filter(pk=types_id)
+            response = pokeType.update(name=j["name"])
+            if response == 0 :
+                return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return HttpResponse(status=status.HTTP_200_OK)
+        except Type.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    elif request.method == 'DELETE':
+        try:
+            pokeType = Type.objects.get(pk=types_id)
+            pokeType.pk = types_id
+            pokeType.delete()
+            return HttpResponse(status=status.HTTP_200_OK)
+        except Type.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
