@@ -190,17 +190,16 @@ def trainersById(request, trainers_id):
         except Trainer.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     elif request.method == 'PUT':
+        j = json.loads(request.body)
         try:
-            data = JSONParser().parse(request)
-        except ParseError:
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-        serializer = TrainerSerializer(data=data)
-        if serializer.is_valid():
-            serializer.update()
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return HttpResponse(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-
+            trainer = Trainer.objects.filter(pk=trainers_id)
+            image = Image.objects.get(url=j["image"])
+            resp = trainer.update(name=j["name"], gender=j["gender"], image=image)
+            if resp == 0:
+                return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return HttpResponse(status=status.HTTP_200_OK)
+        except (Trainer.DoesNotExist, Image.DoesNotExist):
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     elif request.method == 'DELETE':
         try:
             trainer = Trainer.objects.get(pk=trainers_id)
