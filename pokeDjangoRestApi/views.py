@@ -15,6 +15,7 @@ from django.shortcuts import render
 
 # Create your views here.
 
+
 @csrf_exempt
 def imgs(request):
     if request.method == 'POST':
@@ -22,6 +23,7 @@ def imgs(request):
         p = Image(url=j["url"])
         p.save()
         return HttpResponse(status=status.HTTP_200_OK)
+
 
 @csrf_exempt
 def pokemons(request):
@@ -50,8 +52,7 @@ def pokemonsById(request, pokemon_id):
             serializer = PokemonSerializer(pokemon, many=False)
             return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
         except Pokemon.DoesNotExist:
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)     
-    
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     elif request.method == 'PUT':
         try:
             j = json.loads(request.body)
@@ -64,8 +65,6 @@ def pokemonsById(request, pokemon_id):
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     elif request.method == 'DELETE':
         try:
-            print("delete")
-            print(pokemon_id)
             pokemon = Pokemon.objects.get(pk=pokemon_id)
             pokemon.pk = pokemon_id
             pokemon.delete()
@@ -102,7 +101,6 @@ def pokemonsTrainersById(request, pokemonsTrainers_id):
             return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
         except TrainerPokemon.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    
     elif request.method == 'PUT':
         j = json.loads(request.body)
         try:
@@ -152,7 +150,22 @@ def trainersById(request, trainers_id):
         except Trainer.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     elif request.method == 'PUT':
-        return HttpResponse(status=status.HTTP_200_OK)
+        j = json.loads(request.body)
+        try:
+            trainer = Trainer.objects.filter(pk=trainers_id)
+            resp = trainer.update(name=j["name"], gender=j["gender"], image=j["image"])
+            if resp == 0:
+                return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return HttpResponse(status=status.HTTP_200_OK)
+        except (Trainer.DoesNotExist, Pokemon.DoesNotExist):
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    elif request.method == 'DELETE':
+        try:
+            trainer = Trainer.objects.get(pk=trainers_id)
+            trainer.delete()
+            return HttpResponse(status=status.HTTP_200_OK)
+        except Trainer.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
 
 
