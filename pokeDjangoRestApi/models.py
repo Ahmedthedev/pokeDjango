@@ -11,6 +11,22 @@ class Pokemon(models.Model):
     description = models.CharField(max_length=150)
 
 
+
+    def __init__(self,a,b,c):
+        print("entrer")
+        print(b)
+        print(c)
+        super(Pokemon, self).__init__()
+        self.name = b
+        self.description = c
+        print(self.name)
+        print(self.description)
+        print("sortie")
+
+    def __unicode__(self):
+        return self.name
+
+
 class Image(models.Model):
     url = models.CharField(max_length=300)
 

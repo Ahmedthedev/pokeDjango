@@ -33,10 +33,21 @@ def pokemons(request):
         p.save()
         return HttpResponse(status=status.HTTP_200_OK)
 
+@csrf_exempt
 def pokemonsById(request, pokemon_id):
-    pokemon = Pokemon.objects.get(pk=pokemon_id)
-    serializer = PokemonSerializer(pokemon, many=False)
-    return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    if request.method == 'GET':
+        pokemon = Pokemon.objects.get(pk=pokemon_id)
+        serializer = PokemonSerializer(pokemon, many=False)
+        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    elif request.method == 'PUT':
+        j = json.loads(request.body)
+        pokemon = Pokemon.objects.filter(pk=pokemon_id)
+        response = pokemon.update(name=j["name"])
+        if response == 0 :
+            return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return HttpResponse(status=status.HTTP_200_OK)
+
+
 
 
 
