@@ -36,23 +36,34 @@ def pokemons(request):
 @csrf_exempt
 def pokemonsById(request, pokemon_id):
     if request.method == 'GET':
-        pokemon = Pokemon.objects.get(pk=pokemon_id)
-        serializer = PokemonSerializer(pokemon, many=False)
-        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        try:
+            pokemon = Pokemon.objects.get(pk=pokemon_id)
+            serializer = PokemonSerializer(pokemon, many=False)
+            return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        except Pokemon.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)     
+    
     elif request.method == 'PUT':
-        j = json.loads(request.body)
-        pokemon = Pokemon.objects.filter(pk=pokemon_id)
-        response = pokemon.update(name=j["name"])
-        if response == 0 :
-            return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return HttpResponse(status=status.HTTP_200_OK)
+        try:
+            j = json.loads(request.body)
+            pokemon = Pokemon.objects.filter(pk=pokemon_id)
+            response = pokemon.update(name=j["name"])
+            if response == 0 :
+                return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return HttpResponse(status=status.HTTP_200_OK)
+        except Pokemon.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        
     elif request.method == 'DELETE':
-        print("delete")
-        print(pokemon_id)
-        pokemon = Pokemon.objects.get(pk=pokemon_id)
-        pokemon.pk = pokemon_id
-        pokemon.delete()
-        return HttpResponse(status=status.HTTP_200_OK)
+         try:
+            print("delete")
+            print(pokemon_id)
+            pokemon = Pokemon.objects.get(pk=pokemon_id)
+            pokemon.pk = pokemon_id
+            pokemon.delete()
+            return HttpResponse(status=status.HTTP_200_OK)
+        except Pokemon.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
 ### TrainerPokemon
 
@@ -62,15 +73,20 @@ def pokemonsTrainers(request):
         trainers = TrainerPokemon.objects.all()
         serializer = TrainerPokemonSerializer(trainers, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    
     elif request.method == 'POST':
         return HttpResponse(status=status.HTTP_200_OK)
 
 @csrf_exempt
 def pokemonsTrainersById(request, pokemonsTrainers_id):
     if request.method == 'GET':
-        pokemonsTrainers = TrainerPokemon.objects.get(pk=pokemonsTrainers_id)
-        serializer = TrainerPokemonSerializer(pokemonsTrainers, many=False)
-        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        try:
+            pokemonsTrainers = TrainerPokemon.objects.get(pk=pokemonsTrainers_id)
+            serializer = TrainerPokemonSerializer(pokemonsTrainers, many=False)
+            return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        except TrainerPokemon.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    
     elif request.method == 'PUT':
         return HttpResponse(status=status.HTTP_200_OK)
 
@@ -84,15 +100,20 @@ def trainers(request):
         trainers = Trainer.objects.all()
         serializer = TrainerSerializer(trainers, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    
     elif request.method == 'POST':
         return HttpResponse(status=status.HTTP_200_OK)
 
 @csrf_exempt
 def trainersById(request, trainers_id):
     if request.method == 'GET':
-        trainer = Trainer.objects.get(pk=trainers_id)
-        serializer = TrainerSerializer(trainer, many=False)
-        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        try:
+            trainer = Trainer.objects.get(pk=trainers_id)
+            serializer = TrainerSerializer(trainer, many=False)
+            return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        except Trainer.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
     elif request.method == 'PUT':
         return HttpResponse(status=status.HTTP_200_OK)
 
@@ -106,14 +127,19 @@ def types(request):
         types = Type.objects.all()
         serializer = TypeSerializer(types, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+
     elif request.method == 'POST':
         return HttpResponse(status=status.HTTP_200_OK)
 
 @csrf_exempt
 def typesById(request, types_id):
     if request.method == 'GET':
-        pokeType = Type.objects.get(pk=types_id)
-        serializer = TypeSerializer(pokeType, many=False)
-        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        try:
+            pokeType = Type.objects.get(pk=types_id)
+            serializer = TypeSerializer(pokeType, many=False)
+            return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        except Type.DoesNotExist:
+            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        
     elif request.method == 'PUT':
         return HttpResponse(status=status.HTTP_200_OK)
