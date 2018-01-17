@@ -30,7 +30,6 @@ def imgs(request):
             return HttpResponse(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 @csrf_exempt
 def pokemons(request):
     if request.method == 'GET':
@@ -88,15 +87,16 @@ def pokemonsTrainers(request):
         serializer = TrainerPokemonSerializer(trainers, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        j = json.loads(request.body)
         try:
-            pokemon = Pokemon.objects.get(pk=j["pokemon"])
-            trainer = Trainer.objects.get(pk=j["trainer"])
-            resp = TrainerPokemon(name=j["name"], pokemon=pokemon, trainer=trainer, level=j["level"])
-            resp.save()
-            return HttpResponse(status=status.HTTP_200_OK)
-        except (Trainer.DoesNotExist ,Pokemon.DoesNotExist):
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+            data = JSONParser().parse(request)
+        except ParseError:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        serializer = TrainerPokemonSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return HttpResponse(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 
 @csrf_exempt
