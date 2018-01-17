@@ -139,10 +139,16 @@ def trainers(request):
         serializer = TrainerSerializer(trainers, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        j = json.loads(request.body)
-        p = Trainer(name=j["name"], gender=j["gender"], image=j["image"])
-        p.save()
-        return HttpResponse(status=status.HTTP_200_OK)
+        try:
+            data = JSONParser().parse(request)
+        except ParseError:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        serializer = TrainerSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return HttpResponse(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 
 @csrf_exempt
