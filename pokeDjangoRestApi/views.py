@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from rest_framework import  status
-from .models import Pokemon
+from .models import Pokemon, Type, Trainer, TrainerPokemon
 from django.views.decorators.csrf import csrf_exempt
 from pokeDjangoRestApi.serializers import *
 from django.core import serializers
@@ -20,6 +20,7 @@ def imgs(request):
         p = Image(url=j["url"])
         p.save()
         return HttpResponse(status=status.HTTP_200_OK)
+
 @csrf_exempt
 def pokemons(request):
     if request.method == 'GET':
@@ -44,7 +45,9 @@ def pokemonsTrainers(request):
     return HttpResponse(status=status.HTTP_200_OK)
 
 def pokemonsTrainersById(request, pokemonsTrainers_id):
-    return HttpResponse(status=status.HTTP_200_OK)
+    pokemonsTrainers = PokemonTrainers.objects.get(pk=pokemonsTrainers_id)
+    serializer = PokemonTrainersSerializer(pokemonsTrainers, many=False)
+    return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
 
 
 
@@ -53,7 +56,9 @@ def trainers(request):
     return HttpResponse(status=status.HTTP_200_OK)
 
 def trainersById(request, trainers_id):
-    return HttpResponse(status=status.HTTP_200_OK)
+    trainer = Trainer.objects.get(pk=trainers_id)
+    serializer = TrainerSerializer(trainer, many=False)
+    return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
 
 
 

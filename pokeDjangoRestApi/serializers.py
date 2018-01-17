@@ -34,3 +34,27 @@ class PokemonSerializer(serializers.ModelSerializer) :
     class Meta:
         model = Pokemon
         fields = ('name', 'description')
+
+
+class TrainerPokemonSerializer(serializers.ModelSerializer) :
+    class Meta:
+        model = TrainerPokemon
+        fields = ('name', 'pokemon', 'trainer', 'level')
+
+
+class TrainerSerializer(serializers.ModelSerializer) :
+    class Meta:
+        model = Trainer
+        fields = ('name', 'gender', 'image')
+
+
+class TypeSerializer(serializers.ModelSerializer) :
+    class Meta:
+        model = Type
+        fields = ('name')
+
+
+class ImageSerializer(serializers.ModelSerializer) :
+    class Meta:
+        model = Image
+        fields = ('url')
