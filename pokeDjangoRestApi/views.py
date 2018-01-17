@@ -36,7 +36,7 @@ def imgsByID(request,images_id):
         try:
             j = json.loads(request.body)
             pokeType = Image.objects.filter(pk=images_id)
-            response = pokeType.update(name=j["url"])
+            response = pokeType.update(url=j["url"])
             if response == 0 :
                 return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             return HttpResponse(status=status.HTTP_200_OK)
