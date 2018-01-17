@@ -133,10 +133,16 @@ def trainers(request):
         serializer = TrainerSerializer(trainers, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        j = json.loads(request.body)
-        p = Trainer(name=j["name"], gender=j["gender"], image=j["image"])
-        p.save()
-        return HttpResponse(status=status.HTTP_200_OK)
+        try:
+            data = JSONParser().parse(request)
+        except ParseError:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        serializer = TrainerSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return HttpResponse(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -150,15 +156,26 @@ def trainersById(request, trainers_id):
         except Trainer.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     elif request.method == 'PUT':
-        j = json.loads(request.body)
         try:
-            trainer = Trainer.objects.filter(pk=trainers_id)
-            resp = trainer.update(name=j["name"], gender=j["gender"], image=j["image"])
-            if resp == 0:
-                return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            return HttpResponse(status=status.HTTP_200_OK)
-        except (Trainer.DoesNotExist, Pokemon.DoesNotExist):
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+            data = JSONParser().parse(request)
+        except ParseError:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        serializer = TrainerSerializer(data=data)
+        if serializer.is_valid():
+            serializer.update()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return HttpResponse(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
+        # j = json.loads(request.body)
+        # try:
+        #     trainer = Trainer.objects.filter(pk=trainers_id)
+        #     resp = trainer.update(name=j["name"], gender=j["gender"], image=j["image"])
+        #     if resp == 0:
+        #         return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        #     return HttpResponse(status=status.HTTP_200_OK)
+        # except (Trainer.DoesNotExist, Pokemon.DoesNotExist):
+        #     return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     elif request.method == 'DELETE':
         try:
             trainer = Trainer.objects.get(pk=trainers_id)
@@ -178,7 +195,17 @@ def types(request):
         serializer = TypeSerializer(types, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        return HttpResponse(status=status.HTTP_200_OK)
+        try:
+            data = JSONParser().parse(request)
+        except ParseError:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        serializer = TypeSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return HttpResponse(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
 
 @csrf_exempt
 def typesById(request, types_id):
