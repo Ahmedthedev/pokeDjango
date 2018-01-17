@@ -57,4 +57,4 @@ class TypeSerializer(serializers.ModelSerializer) :
 class ImageSerializer(serializers.ModelSerializer) :
     class Meta:
         model = Image
-        fields = ('url')
+        fields = ('url',) #ça buguait jusqu'à ce que j'ajoute la virgule ...

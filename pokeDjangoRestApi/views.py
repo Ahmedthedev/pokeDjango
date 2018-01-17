@@ -13,7 +13,11 @@ from rest_framework.exceptions import ParseError
 
 @csrf_exempt
 def imgs(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
+        imgs = Image.objects.all()
+        serializer = ImageSerializer(imgs, many=True)
+        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    elif request.method == 'POST':
         try:
             data = JSONParser().parse(request)
         except ParseError:
