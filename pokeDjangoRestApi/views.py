@@ -45,7 +45,7 @@ def imgsByID(request,images_id):
     elif request.method == 'GET':
         try:
             pokemon = Image.objects.get(pk=images_id)
-            serializer = PokemonSerializer(pokemon, many=False)
+            serializer = ImageSerializer(pokemon, many=False)
             return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
         except Pokemon.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
