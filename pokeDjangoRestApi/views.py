@@ -27,7 +27,7 @@ def pokemons(request):
         pokemons = Pokemon.objects.all()
         serializer = PokemonSerializer(pokemons, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
-    elif request.method == 'git pPOST':
+    elif request.method == 'POST':
         j = json.loads(request.body)
         p = Pokemon(name=j["name"], description=j["description"])
         p.save()
