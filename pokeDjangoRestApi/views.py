@@ -7,12 +7,19 @@ from .models import Pokemon
 from django.views.decorators.csrf import csrf_exempt
 from pokeDjangoRestApi.serializers import *
 from django.core import serializers
-
+import json
 
 from django.shortcuts import render
 
 # Create your views here.
 
+@csrf_exempt
+def imgs(request):
+    if request.method == 'POST':
+        j = json.loads(request.body)
+        p = Image(url=j["url"])
+        p.save()
+        return HttpResponse(status=status.HTTP_200_OK)
 @csrf_exempt
 def pokemons(request):
     if request.method == 'GET':
@@ -20,8 +27,9 @@ def pokemons(request):
         serializer = PokemonSerializer(pokemons, many=True)
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        pokemon = serializers.deserialize(Pokemon,request.body)
-        pokemon.save()
+        j = json.loads(request.body)
+        p = Pokemon(name=j["name"],description=j["description"])
+        p.save()
         return HttpResponse(status=status.HTTP_200_OK)
 
 def pokemonsById(request, pokemon_id):
